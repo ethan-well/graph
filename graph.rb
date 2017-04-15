@@ -61,12 +61,11 @@ def aed_distance
   route_distance(["A","E","D"])
 end
 
-
 # 广度优先搜索,进行指定深度的搜索
 def next_station(path, count, answers)
   if count == 0                                                            #达到要求的搜索深度
     answers.push(path)
-    return answers                                                         #递归调用中: 当搜索深度到达要求深度之后，返回上次调用
+    return answers                                                         #递归调用: 当搜索深度到达要求深度之后，返回到上次调用
   end
   count = count - 1
   current_station = path.last 
@@ -83,7 +82,7 @@ end
 def trips_number_c_to_c
   paths = next_station([2], 3, [])                                        #搜索所有从C开始的，深度不超过3的所有路径
   valid_paths = []
-  paths.each do |path|                                                    #从'以C开始的，深度不超过3的所有路径'中找出包含第二个C站点的路劲
+  paths.each do |path|                                                    #从'以C开始的，深度不超过3的所有路径'中找出终点为C的路径
     c_station_index = path.each_index.select{|i| (path[i] == 2 && i>0) }
     c_station_index.each do |index|                                       #每个路径里可能包含多个有效路径子段
       valid_paths = valid_paths.push(path[0, index.to_i+1])               #以C开始到C结束的路径
@@ -101,7 +100,7 @@ def  a_to_c_4stops
   valid_paths = []
   paths.each do |path|
     c_station_index = path.each_index.select{|i| (path[i] == 2 && i==4) }
-    valid_paths = valid_paths.push(path[0, c_station_index.last.to_i])  # 因为stops必须是4,所以每个路径中最多包含一个有效路径子段
+    valid_paths = valid_paths.push(path[0, c_station_index.last.to_i])   #因为stops必须是4,所以每个路径中最多包含一个有效路径子段
   end
   valid_paths = valid_paths.uniq.reject { |c| c.empty? }
   return valid_paths.length
@@ -120,7 +119,6 @@ def path_length(path)
     return "NO SUCH ROUTE"
   end
 end
-
 
 #8 The length of the shortest route (in terms of distance to travel) from A to C
 def shortest_route_a_to_c
@@ -149,7 +147,7 @@ def shortest_route_b_to_b
   paths.each do |path|
     c_station_index = path.each_index.select{|i| (path[i] == 1 && i>0) }
     c_station_index.each do |index|
-      valid_paths = valid_paths.push(path[0, index.to_i+1])                          #以A开始到C结束的路径
+      valid_paths = valid_paths.push(path[0, index.to_i+1])                         #以B开始到B结束的路径
     end
   end
 
@@ -167,7 +165,7 @@ def routes_less30_num_c_to_c
   paths.each do |path|
     c_station_index = path.each_index.select{|i| (path[i] == 1 && i>0) }
     c_station_index.each do |index|
-      valid_paths = valid_paths.push(path[0, index.to_i+1])  #以A开始到C结束的路径
+      valid_paths = valid_paths.push(path[0, index.to_i+1])                          #以C开始到C结束的路径
     end
   end
 
@@ -195,5 +193,4 @@ p a_to_c_4stops
 
 p shortest_route_a_to_c
 p shortest_route_b_to_b
-
 p routes_less30_num_c_to_c
