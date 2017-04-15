@@ -120,61 +120,44 @@ def path_length(path)
   end
 end
 
-#8 The length of the shortest route (in terms of distance to travel) from A to C
-def shortest_route_a_to_c
-  paths = next_station([0], 5, [])
+def paths_dists_arr(paths, end_station)
   valid_paths = []
   paths.each do |path|
-    c_station_index = path.each_index.select{|i| (path[i] == 2 && i>0) }
+    c_station_index = path.each_index.select{|i| (path[i] == end_station && i>0) }
     c_station_index.each do |index|
       valid_paths = valid_paths.push(path[0, index.to_i+1])                          #以A开始到C结束的路径
     end
   end
-
   valid_paths = valid_paths.uniq.reject { |c| c.empty? }
-  dists = []
-  valid_paths.each do |path|
-    dists.push(path_length(path))
-  end
   
-  return dists.sort[0]
+  dists_arr = []
+  valid_paths.each do |path|
+    dists_arr.push(path_length(path))
+  end
+
+  return dists_arr
+end
+
+
+#8 The length of the shortest route (in terms of distance to travel) from A to C
+def shortest_route_a_to_c
+  paths = next_station([0], 5, [])
+  dists_arr = paths_dists_arr(paths, 2)
+  return dists_arr.sort[0]
 end
 
 #9 The length of the shortest route (in terms of distance to travel) from B to B
 def shortest_route_b_to_b
   paths = next_station([1], 5, [])
-  valid_paths = []
-  paths.each do |path|
-    c_station_index = path.each_index.select{|i| (path[i] == 1 && i>0) }
-    c_station_index.each do |index|
-      valid_paths = valid_paths.push(path[0, index.to_i+1])                         #以B开始到B结束的路径
-    end
-  end
-
-  valid_paths = valid_paths.uniq.reject { |c| c.empty? }
-  dists = []
-  valid_paths.each do |path|
-    dists.push(path_length(path))
-  end
-  return dists.sort[0]
+  dists_arr = paths_dists_arr(paths, 1)
+  return dists_arr.sort[0]
 end
 
+# The number of different routes from C to C with a distance of less than 30
 def routes_less30_num_c_to_c
-  paths = next_station([2], 10, [])
-  valid_paths = []
-  paths.each do |path|
-    c_station_index = path.each_index.select{|i| (path[i] == 1 && i>0) }
-    c_station_index.each do |index|
-      valid_paths = valid_paths.push(path[0, index.to_i+1])                          #以C开始到C结束的路径
-    end
-  end
-
-  valid_paths = valid_paths.uniq.reject { |c| c.empty? }
-  dists = []
-  valid_paths.each do |path|
-    dists.push(path_length(path))
-  end
-  routes_num = dists.select {|item| item < 30 }.count
+  paths = next_station([2], 10, [])                                                 #10: 最大搜索深度
+  dists_arr = paths_dists_arr(paths, 1)
+  routes_num = dists_arr.select {|item| item < 30 }.count
   return routes_num
 end
 
